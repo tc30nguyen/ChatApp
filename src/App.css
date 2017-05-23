@@ -18,6 +18,23 @@
   font-size: large;
 }
 
+.Username {
+  font-size: 2.5em;
+  color: darkslategray;
+  border-style: solid none;
+  border-width: .01em;
+  padding: .1em;
+}
+.Text-box {
+  margin: .5em;
+  padding: 1em 2em;
+  background-color: grey;
+}
+.Text-line {
+  /*margin: .2em 0em, .5em, 5em;*/
+  text-align: left;
+}
+
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }

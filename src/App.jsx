@@ -3,8 +3,15 @@ import logo from './logo.svg';
 import './App.css';
 
 class App extends Component {
+  constructor() {
+    super()
+    this.state = {
+      username: null,
+    }
+  }
+
   onSubmit(event) {
-    console.log(event.target)
+    this.setState({username: event.target.username.value})
     event.preventDefault()
   }
 
@@ -13,12 +20,20 @@ class App extends Component {
       <div className="App">
         <div className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
+          <h2>Test Chat App</h2>
         </div>
-        <NameForm onSubmit={this.onSubmit} />
+        <Greeting username={this.state.username} onSubmit={this.onSubmit.bind(this)} />
       </div>
     )
   }
+}
+
+function Greeting(props) {
+  const username = props.username
+  if(username) {
+    return <ChatBox username={username} messages={['abc','123','bbb']} />
+  }
+  return <NameForm onSubmit={props.onSubmit} />
 }
 
 class NameForm extends Component {
@@ -35,11 +50,36 @@ class NameForm extends Component {
   render() {
     return (
       <form onSubmit={this.props.onSubmit}>
-        Username: <input type="text" value={this.state.value} onChange={this.handleChange} />
+        Username: <input name="username" type="text" value={this.state.value} onChange={this.handleChange} />
         <input type="submit" value="Submit" />
       </form>
     )
   }
+}
+
+function ChatBox(props) {
+  return (
+    <div>
+      <div className="Username">{props.username}</div>
+      <TextBox messages={props.messages} />
+    </div>
+  )
+}
+
+function TextBox(props) {
+  console.log(props.messages)
+  const textLines = props.messages.map((message) => {
+    return <TextLine text={message} />
+  })
+  return (
+    <div className="Text-box">
+      {textLines}
+    </div>
+  )
+}
+
+function TextLine(props) {
+  return <div className="Text-line">ABC: {props.text}</div>
 }
 
 export default App;
