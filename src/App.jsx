@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
+import ChatBox from './ChatBox/ChatBox'
+import NameForm from './NameForm'
 import logo from './logo.svg'
 import './App.css'
-import ChatBox from './ChatBox'
 
 export default class App extends Component {
   constructor() {
@@ -33,30 +34,4 @@ function Greeting(props) {
     return <ChatBox username={username} />
   }
   return <NameForm onSubmit={props.onSubmit} />
-}
-
-class NameForm extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {value: ''}
-    this.handleChange = this.handleChange.bind(this)
-  }
-
-  handleChange(event) {
-    this.setState({value: event.target.value})
-  }
-
-  render() {
-    return (
-      <form onSubmit={this.props.onSubmit}>
-        Username: <input 
-          name="username" 
-          type="text" 
-          value={this.state.value} 
-          onChange={this.handleChange} 
-        />
-        <input type="submit" value="Submit" />
-      </form>
-    )
-  }
 }
