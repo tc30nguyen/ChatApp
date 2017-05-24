@@ -1,13 +1,12 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react'
+import logo from './logo.svg'
+import './App.css'
+import ChatBox from './ChatBox'
 
-class App extends Component {
+export default class App extends Component {
   constructor() {
     super()
-    this.state = {
-      username: null,
-    }
+    this.state = {username: null}
   }
 
   onSubmit(event) {
@@ -31,7 +30,7 @@ class App extends Component {
 function Greeting(props) {
   const username = props.username
   if(username) {
-    return <ChatBox username={username} messages={['abc','123','bbb']} />
+    return <ChatBox username={username} />
   }
   return <NameForm onSubmit={props.onSubmit} />
 }
@@ -50,36 +49,14 @@ class NameForm extends Component {
   render() {
     return (
       <form onSubmit={this.props.onSubmit}>
-        Username: <input name="username" type="text" value={this.state.value} onChange={this.handleChange} />
+        Username: <input 
+          name="username" 
+          type="text" 
+          value={this.state.value} 
+          onChange={this.handleChange} 
+        />
         <input type="submit" value="Submit" />
       </form>
     )
   }
 }
-
-function ChatBox(props) {
-  return (
-    <div>
-      <div className="Username">{props.username}</div>
-      <TextBox messages={props.messages} />
-    </div>
-  )
-}
-
-function TextBox(props) {
-  console.log(props.messages)
-  const textLines = props.messages.map((message) => {
-    return <TextLine text={message} />
-  })
-  return (
-    <div className="Text-box">
-      {textLines}
-    </div>
-  )
-}
-
-function TextLine(props) {
-  return <div className="Text-line">ABC: {props.text}</div>
-}
-
-export default App;
