@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import InputBox from './InputBox'
 import TextBox from './TextBox'
+import './ChatBox.css'
 
 class Message {
   constructor(username, text) {
@@ -52,13 +53,18 @@ export default class ChatBox extends Component {
 
   render() {
     return (
-      <div>
-        <div className="Username">{this.state.username}</div>
-        <TextBox messages={this.state.messages} />
-        <InputBox
-          handleSend={this.handleSend.bind(this)}
-          connected={this.state.connected}
-        />
+      <div className="Chat-box">
+        <div className="Left-sidebar">
+          <div className="Username">{this.state.username}</div>
+        </div>
+        <div className="Messages-container">
+          <TextBox messages={this.state.messages} />
+          <InputBox
+            handleSend={this.handleSend.bind(this)}
+            connected={this.state.connected}
+          />
+        </div>
+        <div className="Right-sidebar" />
       </div>
     )
   }

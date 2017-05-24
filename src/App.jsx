@@ -10,9 +10,8 @@ export default class App extends Component {
     this.state = {username: null}
   }
 
-  onSubmit(event) {
-    this.setState({username: event.target.username.value})
-    event.preventDefault()
+  handleSubmit(username) {
+    this.setState({username: username})
   }
 
   render() {
@@ -22,7 +21,7 @@ export default class App extends Component {
           <img src={logo} className="App-logo" alt="logo" />
           <h2>Test Chat App</h2>
         </div>
-        <Greeting username={this.state.username} onSubmit={this.onSubmit.bind(this)} />
+        <Greeting username={this.state.username} handleSubmit={this.handleSubmit.bind(this)} />
       </div>
     )
   }
@@ -33,5 +32,5 @@ function Greeting(props) {
   if(username) {
     return <ChatBox username={username} />
   }
-  return <NameForm onSubmit={props.onSubmit} />
+  return <NameForm onSubmit={props.handleSubmit} />
 }

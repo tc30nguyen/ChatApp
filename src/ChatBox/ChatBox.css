@@ -1,0 +1,52 @@
+.Chat-box {
+  height: 85%;
+  width: 100%;
+  position: absolute;
+}
+
+.Left-sidebar {
+  height: 100%;
+  width: 15%;
+  float: left;
+  background-color: #333;
+}
+
+.Right-sidebar {
+  height: 100%;
+  width: 10%;
+  background-color: #333;
+  float: right;
+}
+
+.Messages-container {
+  background-color: grey;
+  height: 100%;
+  width: 75%;
+  float: left;
+}
+
+.Text-box {
+  background-color: grey;
+  height: 92%;
+  /*width: 75%;*/
+  float: left;
+}
+
+.Text-line {
+  text-align: left;
+  margin: .3em .8em;
+}
+
+.Input-box {
+  border-top: black solid;
+  clear: both;
+  height: 8%;
+  width: 100%
+}
+
+.Username {
+  font-size: 2.5em;
+  color: darkslategray;
+  border-style: solid none;
+  border-width: .01em;
+}

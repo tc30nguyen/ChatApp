@@ -13,15 +13,10 @@ export default class NameForm extends Component {
 
   render() {
     return (
-      <form onSubmit={this.props.onSubmit}>
-        Username: <input 
-          name="username" 
-          type="text" 
-          value={this.state.value} 
-          onChange={this.handleChange} 
-        />
-        <input type="submit" value="Submit" />
-      </form>
+      <div className="Name-form">
+        <input type="text" value={this.state.value} onChange={this.handleChange} placeholder="Enter username" />
+        <button type="button" onClick={() => this.props.onSubmit(this.state.value)}>Submit</button>
+      </div>
     )
   }
 }
