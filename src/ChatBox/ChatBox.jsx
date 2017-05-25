@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import InputBox from './InputBox'
+import LeftSidebar from './LeftSidebar'
 import TextBox from './TextBox'
 import './ChatBox.css'
 
@@ -20,6 +21,7 @@ export default class ChatBox extends Component {
       messages: [],
       ws: ws,
       connected: false,
+      peers: new Map(),
     }
     this.initWSConnection(ws)
   }
@@ -29,13 +31,23 @@ export default class ChatBox extends Component {
       this.setState({connected: true})
       this.handleSend(this.state.username + ' has connected.')
     }
+
     ws.onclose = (event) => {
       console.log('WS connection closed')
       this.setState({connected: false})
     }
+
     ws.onmessage = (event) => {
       const messages = this.state.messages.slice()
-      messages.push(event.data)
+      const peers = new Map(this.state.peers)
+      
+      const message = JSON.parse(event.data)
+      console.log(message)
+      // if(!peers.has[message.username]) {
+      //   peers.set(username, true)
+      //   this.setState({peers: peers})
+      // }
+      messages.push(message)
       this.setState({messages: messages})
     }
   }
@@ -54,9 +66,7 @@ export default class ChatBox extends Component {
   render() {
     return (
       <div className="Chat-box">
-        <div className="Left-sidebar">
-          <div className="Username">{this.state.username}</div>
-        </div>
+        <LeftSidebar username={this.state.username} peers={this.state.peers} />
         <div className="Messages-container">
           <TextBox messages={this.state.messages} />
           <InputBox

@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 
 export default function TextBox(props) {
-  const textLines = props.messages.map((message, idx) => {
-    const msg = JSON.parse(message)
+  const textLines = props.messages.map((msg, idx) => {
     return <TextLine key={idx} username={msg.username} text={msg.message} />
   })
 
