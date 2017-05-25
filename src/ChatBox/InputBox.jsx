@@ -3,12 +3,12 @@ import React, { Component } from 'react'
 const styles = {
 	inputBox: {
 		float: 'left',
-		height: '30%',
+		height: '23%',
 		margin: '1em',
-		width: '80%',
+		width: '85%',
 	},
 	button: {
-		height: '40%',
+		height: '30%',
 		width: '10%',
 		float: 'left',
 		margin: '1em 0em',
@@ -28,14 +28,22 @@ export default class InputBox extends Component {
     }
   }
 
+  handleKeyDown(e) {
+    if(e.keyCode === 13) {
+      this.onClick(e)
+    }
+  }
+
   render() {
     return (
       <div className="Input-box">
         <input
+          autoFocus
         	style={styles.inputBox}
           type="text"
           value={this.state.value}
           onChange={(event) => {this.setState({value: event.target.value})}}
+          onKeyDown={(e) => this.handleKeyDown(e)}
         />
         <button style={styles.button} type="button" onClick={(event) => {this.onClick(event)}}>Send</button>
       </div>

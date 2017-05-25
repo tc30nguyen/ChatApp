@@ -27,7 +27,7 @@
 
 .Text-box {
   background-color: grey;
-  height: 92%;
+  height: 94%;
   /*width: 75%;*/
   float: left;
 }
@@ -40,6 +40,6 @@
 .Input-box {
   border-top: black solid;
   clear: both;
-  height: 8%;
+  height: 10%;
   width: 100%
 }

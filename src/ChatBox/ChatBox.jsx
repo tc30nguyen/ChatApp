@@ -15,7 +15,9 @@ export default class ChatBox extends Component {
   constructor(props) {
     super(props)
     const username = props.username
-    const ws = new WebSocket('ws://localhost:8000/ws')
+    // const url = 'localhost:8000'
+    const url = '10.0.0.9:8000'
+    const ws = new WebSocket('ws://' + url + '/ws')
     this.state = {
       username: username,
       messages: [],
@@ -38,15 +40,14 @@ export default class ChatBox extends Component {
     }
 
     ws.onmessage = (event) => {
-      const messages = this.state.messages.slice()
-      const peers = new Map(this.state.peers)
-      
+      const messages = this.state.messages.slice()    
       const message = JSON.parse(event.data)
-      console.log(message)
-      // if(!peers.has[message.username]) {
-      //   peers.set(username, true)
-      //   this.setState({peers: peers})
-      // }
+      if(!this.state.peers.has[message.username] 
+          && message.username !== this.state.username) {
+        const peers = new Map(this.state.peers)
+        peers.set(message.username, true)
+        this.setState({peers: peers})
+      }
       messages.push(message)
       this.setState({messages: messages})
     }
