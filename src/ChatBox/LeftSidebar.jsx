@@ -4,9 +4,9 @@ const styles = {
 	username: {
 		fontFamily: '"Courier New", Courier, monospace',
 		fontSize: '1.0em',
-  	borderStyle: 'inset none',
-  	borderWidth: '.03em',
-  	height: '4%',
+	  	borderStyle: 'inset none',
+	  	borderWidth: '.03em',
+	  	height: '4%',
 	},
 
 	peer: {
@@ -24,7 +24,7 @@ export default function LeftSidebar(props) {
 	})
 	console.log(props)
 	return (
-		<div className="Left-sidebar"
+		<div className="Left-sidebar">
           <div style={styles.username} className="Username">{props.username}</div>
           {peers}
         </div>
