@@ -1,0 +1,39 @@
+* home
+  send csrf associated with the session
+  username
+    ** req
+      {
+        msg: '<requested username>'
+        id: csrfToken
+      }
+      server verifies if username is in use + verifyToken
+    ** response
+      if valid(unused) username: 
+        return {
+          userList: [
+            'abc',
+            'zzz',
+            'etc'
+          ]
+        } only to user
+        store generated userId
+        broadcast {
+          username: server
+          msg: '<username> has connected'
+        }
+      else:
+        return '<username> is already in use' to the user
+
+* enter chat
+  send msg:
+    ** req
+      {
+        msg: <msg>
+        id: <storedId>
+      }
+    ** res
+      if username exists and matches id:
+        broadcast {
+          username: username
+          msg: msg
+        }
