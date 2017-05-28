@@ -4,22 +4,30 @@
   position: absolute;
 }
 
+.Username {
+  color: #C8C8C8;
+  border-color: #C8C8C8;
+  vertical-align: middle;
+  padding-top: 5%;
+  padding-bottom: 5%
+}
+
 .Left-sidebar {
   height: 100%;
-  width: 15%;
+  width: 12.5%;
   float: left;
-  background-color: #333;
+  background-color: grey;
 }
 
 .Right-sidebar {
   height: 100%;
-  width: 10%;
-  background-color: #333;
+  width: 12.5%;
+  background-color: grey;
   float: right;
 }
 
 .Messages-container {
-  background-color: grey;
+  background-color: #989898;
   height: 100%;
   width: 75%;
   float: left;
@@ -38,7 +46,7 @@
 }
 
 .Input-box {
-  border-top: black solid;
+  border-top: slategrey;
   clear: both;
   height: 10%;
   width: 100%

@@ -2,19 +2,19 @@ import React, { Component } from 'react'
 
 const styles = {
 	username: {
-		fontSize: '2.5em',
-  	color: 'darkslategray',
-  	borderStyle: 'solid none',
-  	borderWidth: '.01em',
-  	height: '10%',
+		fontFamily: '"Courier New", Courier, monospace',
+		fontSize: '1.0em',
+  	borderStyle: 'inset none',
+  	borderWidth: '.03em',
+  	height: '4%',
 	},
 
 	peer: {
 		fontSize: '2.5em',
-  	color: 'black',
-  	borderStyle: 'solid none',
-  	borderWidth: '.01em',
-  	height: '10%',
+	  	color: 'black',
+	  	borderStyle: 'solid none',
+	  	borderWidth: '.03em',
+	  	height: '4%',
 	}
 }
 
@@ -24,7 +24,7 @@ export default function LeftSidebar(props) {
 	})
 	console.log(props)
 	return (
-		<div className="Left-sidebar">
+		<div className="Left-sidebar"
           <div style={styles.username} className="Username">{props.username}</div>
           {peers}
         </div>
@@ -33,4 +33,4 @@ export default function LeftSidebar(props) {
 
 function Peer(props) {
 	return <div style={styles.peer}>{props.username}</div>
-}
+} 

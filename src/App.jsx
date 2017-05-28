@@ -19,7 +19,6 @@ export default class App extends Component {
       <div className="App">
         <div className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
-          <h2>Test Chat App</h2>
         </div>
         <Greeting username={this.state.username} handleSubmit={this.handleSubmit.bind(this)} />
       </div>
