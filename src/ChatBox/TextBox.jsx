@@ -15,3 +15,5 @@ export default function TextBox(props) {
 function TextLine(props) {
   return <div className="Text-line">{props.username}: {props.text}</div>
 }
+
+export class ABC extends Component {} //temporarily for compiler warnings

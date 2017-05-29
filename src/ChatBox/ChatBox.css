@@ -1,15 +1,7 @@
 .Chat-box {
-  height: 85%;
+  height: 95%;
   width: 100%;
   position: absolute;
-}
-
-.Username {
-  color: #C8C8C8;
-  border-color: #C8C8C8;
-  vertical-align: middle;
-  padding-top: 5%;
-  padding-bottom: 5%
 }
 
 .Left-sidebar {
@@ -43,11 +35,4 @@
 .Text-line {
   text-align: left;
   margin: .3em .8em;
-}
-
-.Input-box {
-  border-top: slategrey;
-  clear: both;
-  height: 10%;
-  width: 100%
 }

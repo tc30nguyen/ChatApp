@@ -7,6 +7,9 @@ const styles = {
 	  	borderStyle: 'inset none',
 	  	borderWidth: '.03em',
 	  	height: '4%',
+		  color: '#C8C8C8',
+  		borderColor: '#C8C8C8',
+  		paddingTop: '5%',
 	},
 
 	peer: {
@@ -22,15 +25,16 @@ export default function LeftSidebar(props) {
 	const peers = Array.from(props.peers).map((peer, idx) => {
 		return <Peer key={idx} style={styles.peer} username={peer[0]} />
 	})
-	console.log(props)
 	return (
 		<div className="Left-sidebar">
-          <div style={styles.username} className="Username">{props.username}</div>
-          {peers}
-        </div>
+      <div style={styles.username} className="Username">{props.username}</div>
+      {peers}
+    </div>
 	)
 }
 
 function Peer(props) {
 	return <div style={styles.peer}>{props.username}</div>
 } 
+
+export class ABC extends Component {} //temporarily for compiler warnings

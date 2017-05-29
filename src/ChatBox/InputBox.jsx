@@ -6,6 +6,8 @@ const styles = {
 		height: '23%',
 		margin: '1em',
 		width: '85%',
+    borderTop: 'slategrey',
+    clear: 'both',
 	},
 	button: {
 		height: '30%',
