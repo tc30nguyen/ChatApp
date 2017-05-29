@@ -5,9 +5,9 @@ import TextBox from './TextBox'
 import './ChatBox.css'
 
 class Message {
-  constructor(username, text) {
-    this.username = username
+  constructor(text, id) {
     this.message = text
+    this.id = id
   }
 }
 
@@ -24,6 +24,7 @@ export default class ChatBox extends Component {
       ws: ws,
       connected: false,
       peers: new Map(),
+      id: props.id,
     }
     this.initWSConnection(ws)
   }
@@ -31,7 +32,7 @@ export default class ChatBox extends Component {
   initWSConnection(ws) {
     ws.onopen = (event) => {
       this.setState({connected: true})
-      this.handleSend(this.state.username + ' has connected.')
+      this.handleSend(this.state.username, this.state.id)
     }
 
     ws.onclose = (event) => {
@@ -59,7 +60,7 @@ export default class ChatBox extends Component {
     }
     else if(message) {
       this.state.ws.send(
-        JSON.stringify(new Message(this.state.username, message))
+        JSON.stringify(new Message(message, this.state.id))
       )
     }
   }
