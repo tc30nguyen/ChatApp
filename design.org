@@ -17,14 +17,25 @@
           ]
         } only to user
         store generated userId
-        broadcast {
-          username: server
-          msg: '<username> has connected'
-        }
       else:
         return '<username> is already in use' to the user
 
 * enter chat
+  join:
+    ** upgrade to ws connection
+      *** req
+        {
+          msg: <username>
+          id: <token>
+        }
+      *** res
+        {
+          <list of current users in chatroom>
+        }
+      broadcast {
+        username: server
+        msg: '<username> has connected'
+      }
   send msg:
     ** req
       {

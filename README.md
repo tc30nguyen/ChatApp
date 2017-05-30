@@ -1,1 +1,1 @@
-Basic Chat App to try out react and go.
+Basic Chat App using react and go.
