@@ -4,6 +4,8 @@ import (
 	"log"
 	"net/http"
 	"errors"
+	"crypto/rand"
+	"math/big"
 
 	"github.com/gorilla/websocket"
 )
@@ -14,14 +16,19 @@ type message struct {
 	userId string `json:"id"`
 }
 
+type user struct {
+	username string
+	token string
+	ws *websocket.Conn
+}
+
 func handleConnections(
-	clients map[string]*websocket.Conn,
+	clients map[string]user,
 	broadcast chan message,
-	upgrader websocket.Upgrader) func(w http.ResponseWriter, r *http.Request) {
+	upgrader websocket.Upgrader,
+	userId string) func(w http.ResponseWriter, r *http.Request) {
 
 	return func(w http.ResponseWriter, r *http.Request) {
-		userId := "testabc123" //temp
-
 		ws, err := upgrader.Upgrade(w, r, nil)
 		if err != nil {
 			log.Printf("Websocket init error. %v", err)
@@ -43,8 +50,7 @@ func handleConnections(
 
 func getUsername(
 	ws *websocket.Conn,
-	userId string,
-	clients map[string]*websocket.Conn) (string, error) {
+	clients map[string]user) (string, error) {
 	
 	for {
 		var msg message
@@ -78,7 +84,7 @@ func readMessages(
 	}
 }
 
-func handleMessages(clients map[string]*websocket.Conn, broadcast chan message){
+func handleMessages(clients map[string]user, broadcast chan message){
 	for {
 		msg := <- broadcast
 		for username, client := range clients {
@@ -92,8 +98,33 @@ func handleMessages(clients map[string]*websocket.Conn, broadcast chan message){
 	}
 }
 
+func handleGetUsername(
+	clients map[string]user,
+	userId string) func(http.ResponseWriter, *http.Request) {
+
+	return func(resWriter http.ResponseWriter, req *http.Request) {
+		var msg message
+		err := json.NewDecoder(req.Body).Decode(&msg)
+		if err != nil {
+			log.Printf("getUsername error: %v", err)
+		}
+		defer req.Body.Close()
+
+		username := msg.message
+		if _, present := clients[username]; !present {
+			var token big.Int
+			clients[username] = user{username, userId}
+			resWriter.Write([]byte())
+		}
+		else {
+			resWriter.WriteHeader(http.StatusConflict)
+			resWriter.Write()
+		}
+	}
+}
+
 func main() {
-	var clients = make(map[string]*websocket.Conn)
+	var clients = make(map[string]user)
 	var broadcast = make(chan message)
 	var upgrader = websocket.Upgrader{
 		// TODO: remove this later. Just for local dev
@@ -101,8 +132,10 @@ func main() {
 			return true
 		},
 	}
+	userId := "testabc123" //temp
 
-	http.HandleFunc("/ws", handleConnections(clients, broadcast, upgrader))
+	http.HandleFunc("/username", handleGetUsername(clients, userId))
+	http.HandleFunc("/ws", handleConnections(clients, broadcast, upgrader, userId))
 	go handleMessages(clients, broadcast)
 
 	log.Println("http server started on :8000")

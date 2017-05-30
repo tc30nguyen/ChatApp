@@ -14,32 +14,18 @@ class Message {
 export default class ChatBox extends Component {
   constructor(props) {
     super(props)
-    const username = props.username
-    // const url = 'localhost:8000'
-    const url = '10.0.0.9:8000'
-    const ws = new WebSocket('ws://' + url + '/ws')
     this.state = {
-      username: username,
+      username: props.username,
       messages: [],
-      ws: ws,
-      connected: false,
+      ws: null,
       peers: new Map(),
       id: props.id,
     }
-    this.initWSConnection(ws)
+    this.setState({ws: this.initWSConnection(props.url)})
   }
 
-  initWSConnection(ws) {
-    ws.onopen = (event) => {
-      this.setState({connected: true})
-      this.handleSend(this.state.username, this.state.id)
-    }
-
-    ws.onclose = (event) => {
-      console.log('WS connection closed')
-      this.setState({connected: false})
-    }
-
+  initWSConnection(url) {
+    const ws = new WebSocket('ws://' + url + '/ws')
     ws.onmessage = (event) => {
       const messages = this.state.messages.slice()    
       const message = JSON.parse(event.data)
@@ -52,10 +38,11 @@ export default class ChatBox extends Component {
       messages.push(message)
       this.setState({messages: messages})
     }
+    return ws
   }
 
   handleSend(message) {
-    if(!this.state.connected) {
+    if(!this.state.ws.readyState === this.state.ws.CLOSED) {
       throw String('Socket closed.')
     }
     else if(message) {
@@ -71,10 +58,7 @@ export default class ChatBox extends Component {
         <LeftSidebar username={this.state.username} peers={this.state.peers} />
         <div className="Messages-container">
           <TextBox messages={this.state.messages} />
-          <InputBox
-            handleSend={this.handleSend.bind(this)}
-            connected={this.state.connected}
-          />
+          <InputBox handleSend={this.handleSend.bind(this)} />
         </div>
         <div className="Right-sidebar" />
       </div>
