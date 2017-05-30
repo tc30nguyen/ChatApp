@@ -24,10 +24,8 @@ export default class InputBox extends Component {
   }
 
   onClick(event) {
-    if(this.props.connected) {
-      this.props.handleSend(this.state.value)
-      this.setState({value: ''})
-    }
+    this.props.handleSend(this.state.value)
+    this.setState({value: ''})
   }
 
   handleKeyDown(e) {

@@ -9,14 +9,8 @@
       server verifies if username is in use + verifyToken
     ** response
       if valid(unused) username: 
-        return {
-          userList: [
-            'abc',
-            'zzz',
-            'etc'
-          ]
-        } only to user
-        store generated userId
+        return '<userId>'  //only to user
+        store generated userId mapped with username
       else:
         return '<username> is already in use' to the user
 

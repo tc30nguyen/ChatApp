@@ -9,19 +9,23 @@ import (
 )
 
 type message struct {
-	username string `json:"username"`
-	message string `json:"message"`
-	userId string `json:"id"`
+	Username string `json:"username"`
+	Message string `json:"message"`
+	UserId string `json:"id"`
+}
+
+type user struct {
+	username string
+	id string
+	ws *websocket.Conn
 }
 
 func handleConnections(
-	clients map[string]*websocket.Conn,
-	broadcast chan message,
-	upgrader websocket.Upgrader) func(w http.ResponseWriter, r *http.Request) {
+	clients map[string]*user,
+	readMessages func(user),
+	upgrader websocket.Upgrader) http.HandlerFunc {
 
 	return func(w http.ResponseWriter, r *http.Request) {
-		userId := "testabc123" //temp
-
 		ws, err := upgrader.Upgrade(w, r, nil)
 		if err != nil {
 			log.Printf("Websocket init error. %v", err)
@@ -29,63 +33,52 @@ func handleConnections(
 		}
 		defer ws.Close()
 
-		username, err := getUsername(ws, userId, clients)
+		user, err := getUsername(ws, clients)
 		if err != nil {
 			log.Println(err)
 			return
 		}
-		clients[username] = ws
-		defer delete(clients, username)
+		defer delete(clients, user.id)
+		user.ws = ws
 
-		readMessages(username, ws, userId, broadcast)
+		readMessages(*user)
 	}
 }
 
-func getUsername(
-	ws *websocket.Conn,
-	userId string,
-	clients map[string]*websocket.Conn) (string, error) {
-	
-	for {
-		var msg message
-		err := ws.ReadJSON(&msg)
-		if err != nil || msg.userId != userId {
-			log.Printf("error: %v.\nmsg: %v", err, msg)
-			break
-		}
-
-		if _, present := clients[msg.message]; !present {
-			return msg.message, nil
-		}
+func getUsername(ws *websocket.Conn, clients map[string]*user) (*user, error) {
+	var msg message
+	err := ws.ReadJSON(&msg)
+	if _, present := clients[msg.Username]; err != nil || !present {
+		log.Printf("error: %v.\nmsg: %+v", err, msg)
+		return &user{}, errors.New("username was not yet allocated")
 	}
-	return "", errors.New("Client failed to set username")
+	return clients[msg.Username], nil
 }
 
-func readMessages(
-	username string,
-	ws *websocket.Conn,
-	userId string,
-	broadcast chan message){
-	
-	for {
-		var msg message
-		err := ws.ReadJSON(&msg)
-		if err != nil || msg.userId != userId {
-			log.Printf("error: %v.\nmsg: %v", err, msg)
-			break
+// adds messages received from a user to the broadcast channel
+func readMessages(broadcast chan message) func(user) {
+	return func(user user) {
+		for {
+			var msg message
+			err := user.ws.ReadJSON(&msg)
+			if err != nil || msg.UserId != user.id {
+				log.Printf("error: %v.\nmsg: %+v", err, msg)
+				break
+			}
+			broadcast <- msg
 		}
-		broadcast <- message{username: username, message: msg.message}
 	}
 }
 
-func handleMessages(clients map[string]*websocket.Conn, broadcast chan message){
+// broadcasts messages in the broadcast channel to all users
+func handleMessages(clients map[string]*user, broadcast chan message){
 	for {
 		msg := <- broadcast
-		for username, client := range clients {
-			err := client.WriteJSON(msg)
+		for username, user := range clients {
+			err := user.ws.WriteJSON(msg)
 			if err != nil {
 				log.Printf("error: %v.\nmsg: %v", err, msg)
-				client.Close()
+				user.ws.Close()
 				delete(clients, username)
 			}
 		}
@@ -93,16 +86,20 @@ func handleMessages(clients map[string]*websocket.Conn, broadcast chan message){
 }
 
 func main() {
-	var clients = make(map[string]*websocket.Conn)
-	var broadcast = make(chan message)
-	var upgrader = websocket.Upgrader{
+	clients := make(map[string]*user)
+	broadcast := make(chan message)
+	upgrader := websocket.Upgrader{
 		// TODO: remove this later. Just for local dev
 		CheckOrigin: func(r *http.Request) bool {
 			return true
 		},
 	}
 
-	http.HandleFunc("/ws", handleConnections(clients, broadcast, upgrader))
+	http.HandleFunc("/username", HandleGetUsername(clients))
+	http.HandleFunc(
+		"/ws", 
+		handleConnections(clients, readMessages(broadcast), upgrader),
+	)
 	go handleMessages(clients, broadcast)
 
 	log.Println("http server started on :8000")
