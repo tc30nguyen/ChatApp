@@ -7,12 +7,19 @@ import './App.css'
 const url = '10.192.2.228:8000'
 // const url = 'localhost:8000'
 
+const styles = {
+  usernameSubmitError: {
+    color: 'red'
+  }
+}
+
 export default class App extends Component {
   constructor() {
     super()
     this.state = {
       username: null,
       userId: null,
+      error: null,
     }
   }
 
@@ -22,7 +29,9 @@ export default class App extends Component {
       body: JSON.stringify(new Message(username))
     }).then((res) => {
       if(!res.ok) {
-        throw new Error('Username is not valid or already in use.')
+        const errorMsg = 'Username is not valid or already in use.'
+        this.setState({error: errorMsg})
+        throw new Error(errorMsg)
       }
       res.text().then((body) => {
         this.setState({username: username, userId: body})
@@ -43,6 +52,7 @@ export default class App extends Component {
           handleSubmit={this.handleSubmit.bind(this)} 
           url={url}
           id={this.state.userId}
+          error={this.state.error}
         />
       </div>
     )
@@ -57,7 +67,7 @@ function Greeting(props) {
     if(props.error) {
       return (
         <div>
-          <div className="Name-submit-error">{props.error}</div>
+          <div style={styles.usernameSubmitError}>{props.error}</div>
           {nameForm}
         </div>
       )
