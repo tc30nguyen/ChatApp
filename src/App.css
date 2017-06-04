@@ -5,30 +5,9 @@ html, body {
   padding: 0;
 }
 
-.App {
-  text-align: center;
-  height: 100%;
-  position: absolute;
-  width: 100%;
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-}
-
 .App-logo {
   animation: App-logo-spin infinite 20s linear;
   height: 100%;
-}
-
-.App-header {
-  background-color: #222;
-  height: 5%;
-  color: white;
-}
-
-.App-intro {
-  font-size: large;
 }
 
 

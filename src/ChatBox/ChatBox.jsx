@@ -15,7 +15,6 @@ export class Message {
 export default class ChatBox extends Component {
   constructor(props) {
     super(props)
-    console.log(props.id)
     const ws = this.initWSConnection(props.url)
     this.state = {
       messages: [],
@@ -28,6 +27,10 @@ export default class ChatBox extends Component {
     const ws = new WebSocket('ws://' + url + '/ws')
     ws.onopen = (event) => {
       ws.send(JSON.stringify(new Message(null, this.props.id, this.props.username)))
+    }
+    ws.onclose = (event) => {
+      console.log(event)
+      alert('Connection lost. Please refresh the page.')
     }
 
     ws.onmessage = (event) => {
@@ -62,11 +65,7 @@ export default class ChatBox extends Component {
   }
 
   handleSend(message) {
-    if(!this.state.ws.readyState === this.state.ws.CLOSED) {
-      console.log("SOCKET CLOSED")
-      throw String('Socket closed.')
-    }
-    else if(message) {
+    if(message) {
       this.state.ws.send(
         JSON.stringify(new Message(message, this.props.id))
       )

@@ -8,8 +8,25 @@ const url = '10.192.2.228:8000'
 // const url = 'localhost:8000'
 
 const styles = {
+  app : {
+    textAlign: 'center',
+    height: '100%',
+    position: 'absolute',
+    width: '100%',
+    boxSizing: 'border-box',
+    margin: '0',
+    padding: '0',
+    overflow: 'hidden',
+  },
+  
   usernameSubmitError: {
     color: 'red'
+  },
+
+  appHeader: {
+    backgroundColor: '#222',
+    height: '5%',
+    color: 'white',
   }
 }
 
@@ -29,22 +46,24 @@ export default class App extends Component {
       body: JSON.stringify(new Message(username))
     }).then((res) => {
       if(!res.ok) {
-        const errorMsg = 'Username is not valid or already in use.'
-        this.setState({error: errorMsg})
-        throw new Error(errorMsg)
+        throw new Error('Username is not valid or already in use')
       }
       res.text().then((body) => {
         this.setState({username: username, userId: body})
       })
     }).catch((e) => {
-      console.log(e)
+      let errorMsg = e.message
+      if(e instanceof TypeError) {
+        errorMsg = 'Failed to connect'
+      }
+      this.setState({error: errorMsg})
     })
   }
 
   render() {
     return (
-      <div className="App">
-        <div className="App-header">
+      <div className="App" style={styles.app}>
+        <div className="App-header" style={styles.appHeader}>
           <img src={logo} className="App-logo" alt="logo" />
         </div>
         <Greeting 

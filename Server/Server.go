@@ -72,6 +72,7 @@ func broadcastUsernames(user user, clients map[string]*user) {
 					user.username, 
 					err,
 				)
+				delete(clients, peerName)
 			}
 			idx++
 		}
