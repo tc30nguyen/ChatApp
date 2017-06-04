@@ -41,6 +41,7 @@ func handleConnections(
 		defer delete(clients, user.id)
 		user.ws = ws
 
+		broadcastUsernames(*user, clients)
 		readMessages(*user)
 	}
 }
@@ -55,6 +56,33 @@ func getUsername(ws *websocket.Conn, clients map[string]*user) (*user, error) {
 	return clients[msg.Username], nil
 }
 
+// send new user a list of current peers and notify peers of the new user
+func broadcastUsernames(user user, clients map[string]*user) {
+	peers := make([]string, len(clients) - 1)
+	idx := 0
+	for peerName, peer := range clients {
+		if peerName != user.username {
+			// peers = append(peers, peerName)
+			peers[idx] = peerName
+			err := peer.ws.WriteJSON(message{Username: user.username, UserId: "Server"})
+			if err != nil {
+				log.Printf(
+					"Error notifying %s of new user: %s.\n%v", 
+					peerName, 
+					user.username, 
+					err,
+				)
+			}
+			idx++
+		}
+	}
+
+	err := user.ws.WriteJSON(peers)
+	if err != nil {
+		log.Printf("%v", err)
+	}
+}
+
 // adds messages received from a user to the broadcast channel
 func readMessages(broadcast chan message) func(user) {
 	return func(user user) {
@@ -65,7 +93,10 @@ func readMessages(broadcast chan message) func(user) {
 				log.Printf("error: %v.\nmsg: %+v", err, msg)
 				break
 			}
-			broadcast <- msg
+			broadcast <- message{
+				Username: user.username,
+				Message: msg.Message,
+			}
 		}
 	}
 }

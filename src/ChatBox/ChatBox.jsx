@@ -22,7 +22,6 @@ export default class ChatBox extends Component {
       ws: ws,
       peers: new Map(),
     }
-    // ws.send(new Message(null, null, props.username))
   }
 
   initWSConnection(url) {
@@ -30,31 +29,46 @@ export default class ChatBox extends Component {
     ws.onopen = (event) => {
       ws.send(JSON.stringify(new Message(null, this.props.id, this.props.username)))
     }
+
     ws.onmessage = (event) => {
-      const messages = this.state.messages.slice()    
       const message = JSON.parse(event.data)
-      if(!this.state.peers.has[message.username] 
-          && message.username !== this.state.username) {
-        const peers = new Map(this.state.peers)
-        peers.set(message.username, true)
+      if(Object.prototype.toString.call(message) === '[object Array]' ) {
+        const peers = new Map()
+        message.forEach((peer) => {
+          if(!this.state.peers.has[peer] 
+              && peer !== this.state.username) {
+            peers.set(peer, true)
+          }
+        })
         this.setState({peers: peers})
+      } else {
+        // add new peer
+        if(!this.state.peers.has[message.username] 
+            && message.username !== this.state.username) {
+          const peers = new Map(this.state.peers)
+          peers.set(message.username, true)
+          this.setState({peers: peers})
+        }
+
+        // if message is not a server notification
+        if(!message.id) {
+          const messages = this.state.messages.slice()    
+          messages.push(message)
+          this.setState({messages: messages})
+        }
       }
-      messages.push(message)
-      this.setState({messages: messages})
     }
     return ws
   }
 
   handleSend(message) {
-    console.log('sending message stuff')
     if(!this.state.ws.readyState === this.state.ws.CLOSED) {
       console.log("SOCKET CLOSED")
       throw String('Socket closed.')
     }
     else if(message) {
-      console.log("sending msg: " + message)
       this.state.ws.send(
-        JSON.stringify(new Message(message, this.props.id, this.props.username))
+        JSON.stringify(new Message(message, this.props.id))
       )
     }
   }

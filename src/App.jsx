@@ -4,8 +4,8 @@ import NameForm from './NameForm'
 import logo from './logo.svg'
 import './App.css'
 
-// const url = '10.0.0.9:8000'
-const url = 'localhost:8000'
+const url = '10.192.2.228:8000'
+// const url = 'localhost:8000'
 
 export default class App extends Component {
   constructor() {
@@ -50,9 +50,19 @@ export default class App extends Component {
 }
 
 function Greeting(props) {
-  const username = props.username
-  if(username) {
-    return <ChatBox username={username} url={props.url} id={props.id} />
+  if(props.username) {
+    return <ChatBox username={props.username} url={props.url} id={props.id} />
+  } else {
+    const nameForm = <NameForm onSubmit={props.handleSubmit} />
+    if(props.error) {
+      return (
+        <div>
+          <div className="Name-submit-error">{props.error}</div>
+          {nameForm}
+        </div>
+      )
+    } else {
+      return nameForm
+    }
   }
-  return <NameForm onSubmit={props.handleSubmit} />
-} 
+}
