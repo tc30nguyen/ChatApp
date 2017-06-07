@@ -7,18 +7,19 @@ const styles = {
 	  	borderStyle: 'inset none',
 	  	borderWidth: '.03em',
 	  	height: '4%',
-		  color: '#C8C8C8',
-  		borderColor: '#C8C8C8',
+		  color: 'black',
+  		borderColor: 'black',
   		paddingTop: '5%',
 	},
 
 	peer: {
+		fontFamily: '"Courier New", Courier, monospace',
 		fontSize: '1em',
 		paddingTop: '.5em',
-  	color: 'black',
-  	borderStyle: 'solid none',
-  	borderWidth: '.03em',
-  	height: '4%',
+	  	color: 'black',
+	  	borderStyle: 'solid none',
+	  	borderWidth: '.03em',
+	  	height: '4%',
 	}
 }
 
@@ -37,7 +38,13 @@ export default function LeftSidebar(props) {
 }
 
 function Peer(props) {
-	return <div style={styles.peer}>{props.username}</div>
+	console.log(this)
+	return <div 
+		style={styles.peer} 
+		onMouseOver={(e) => e.target.style.backgroundColor = '#4d4d4d'}
+		onMouseOut={(e) => e.target.style.backgroundColor = 'grey'}>
+			{props.username}
+	</div>
 } 
 
 export class ABC extends Component {} //temporarily for compiler warnings
